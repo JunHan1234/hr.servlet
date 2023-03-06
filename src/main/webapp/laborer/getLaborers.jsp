@@ -1,4 +1,24 @@
 <%@ page language='java' contentType='application/json' pageEncoding='utf-8' %>
+<%@ page import='com.my.hr.service.LaborerService' %>
+<%@ page import='com.my.hr.service.LaborerServiceImpl' %>
+<%@ page import='com.my.hr.domain.Laborer' %>
+<%@ page import='java.util.List' %>
+<%!
+	LaborerService laborerService = new LaborerServiceImpl();
+%>
+<%
+	List<Laborer> laborers = laborerService.getLaborers();
+	String json = "[";
+	for(Laborer laborer: laborers) {
+		json += "{\"laborerId\":" + laborer.getLaborerId() + ",";
+		json += "\"laborerName\":\"" + laborer.getLaborerName() + "\",";
+		json += "\"hireDate\":\"" + laborer.getHireDate() + "\"},";
+	}
+	json += "]";
+	json = json.replaceAll("},]", "}]");
+%>
+<%= json %>
+<%-- presentation layer를 test.
 [
 	{
 		"laborerId": 1,
@@ -16,3 +36,4 @@
 		"hireDate": "2022-11-03"
 	}
 ]
+--%>

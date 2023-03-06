@@ -61,17 +61,37 @@
 		listLaborers()
 		
 		//노동자 추가
-		$('#addLaborerBtn').click(e => {
-			if(!isVal($('#laborerName')) && !isVal($('#hireDate'))) {
-				e.preventDefault()
+		$('#addLaborerBtn').click(() => {
+			if(isVal($('#laborerName')) && isVal($('#hireDate'))) {
+				let laborer = {
+					laborerName: $('#laborerName').val(),
+					hireDate: $('#hireDate').val()
+				}
+			
+				$.ajax({
+					url: 'laborer/addLaborer.jsp',
+					//?laborerName=john&hireDate=2022-11-20 형태의 queryString이 serializing해서 data에 들어간다.
+					data: laborer,
+					success: listLaborers
+				})
 			}
 		})
 	
 		//노동자 수정
-		$('#fixLaborerBtn').click(e => {
-			if(!isVal($('#laborerId:checked')) &&
-						!isVal($('#laborerName')) && !isVal($('#hireDate'))) {
-				e.preventDefault()
+		$('#fixLaborerBtn').click(() => {
+			if(isVal($('#laborerId:checked')) &&
+				isVal($('#laborerName')) && isVal($('#hireDate'))) {
+				let laborer = {
+					laborerId: $('#laborerId:checked').val(),
+					laborerName: $('#laborerName').val(),
+					hireDate: $('#hireDate').val()
+				}
+				
+				$.ajax({
+					url: 'laborer/fixLaborer.jsp',
+					data: laborer,
+					success: listLaborers
+				})
 			}
 		})
 	
@@ -92,6 +112,11 @@
 		})
 	
 		$('#delLaborerOkBtn').click(() => {
+			$.ajax({
+				url: 'laborer/delLaborer.jsp',
+				data: {laborerId: $('#laborerId:checked').val()},
+				success: listLaborers
+			})
 	        $('#modal').modal('hide')
 		})
 	}
@@ -129,15 +154,15 @@
                     </div>
                 </div>
                 <div class='gap-2 col d-flex justify-content-end'>
-                    <button formaction='addLaborer.jsp' type='submit' class='btn btn-primary' id='addLaborerBtn'>
+                    <button type='button' class='btn btn-primary' id='addLaborerBtn'>
                         <i class='bi bi-plus-circle'></i>
                         <span class='d-none d-md-inline'>추가</span>
                     </button>
-                    <button formaction='fixLaborer.jsp' type='submit' class='btn btn-success' id='fixLaborerBtn'>
+                    <button type='button' class='btn btn-success' id='fixLaborerBtn'>
                         <i class='bi bi-check-circle'></i>
                         <span class='d-none d-md-inline'>수정</span>
                     </button>
-                    <button class='btn btn-danger' id='delLaborerBtn'>
+                    <button type='button' class='btn btn-danger' id='delLaborerBtn'>
                         <i class='bi bi-x-circle'></i>
                         <span class='d-none d-md-inline'>삭제</span>
                     </button>
@@ -164,23 +189,21 @@
     </div>
 </div>
 </div>
-<form method='post'>
-	<div class='modal fade' id='modal'>
-	    <div class='modal-dialog'>
-	        <div class='modal-content'>
-	            <div class='modal-header'>
-	                <div type='button' class='btn-close btn-sm' data-bs-dismiss='modal'></div>
-	            </div>
-	            <div class='modal-body'>
-	                <p id='modalMsg'></p>
-	            </div>
-	            <div class='modal-footer' id='modalBtn'>
-	                <div type='button' class='btn btn-secondary' data-bs-dismiss='modal'>아니오</div>
-	                <button formaction='delLaborer.jsp' type='submit' class='btn btn-primary' id='delLaborerOkBtn'>예</button>
-	            </div>
-	        </div>
-	    </div>
-	</div>
-</form>
+<div class='modal fade' id='modal'>
+    <div class='modal-dialog'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <button type='button' class='btn-close btn-sm' data-bs-dismiss='modal'></button>
+            </div>
+            <div class='modal-body'>
+                <p id='modalMsg'></p>
+            </div>
+            <div class='modal-footer' id='modalBtn'>
+                <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>아니오</button>
+                <button type='button' class='btn btn-primary' id='delLaborerOkBtn'>예</button>
+            </div>
+        </div>
+    </div>
+</div>
 </body>
 </html>
